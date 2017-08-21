@@ -12,7 +12,7 @@ image: gitlab/gitlab-ce:9.4.1-ce.0
 ## The URL (with protocol) that your users will use to reach the install.
 ## ref: https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
 ##
-#externalUrl: http://your-domain.com/
+externalUrl: http://kube-gitlab.schutrup.local
 
 ## Change the initial default admin password if set. If not set, you'll be
 ## able to set it when you first visit your install.
@@ -64,14 +64,16 @@ resources:
 persistence:
   ## This volume persists generated configuration files, keys, and certs.
   ##
+  existingClaim: slow-nfs-001
   gitlabEtc:
-    enabled: true
+    enabled: false
     size: 1Gi
     ## If defined, volume.beta.kubernetes.io/storage-class: <storageClass>
     ## Default: volume.alpha.kubernetes.io/storage-class: default
     ##
     # storageClass:
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
+    existingClaim: slow-nfs-001
   ## This volume is used to store git data and other project files.
   ## ref: https://docs.gitlab.com/omnibus/settings/configuration.html#storing-git-data-in-an-alternative-directory
   ##
@@ -82,14 +84,15 @@ persistence:
     ## Default: volume.alpha.kubernetes.io/storage-class: default
     ##
     # storageClass:
-    accessMode: ReadWriteOnce
+    accessMode: ReadWriteMany
+    existingClaim: slow-nfs-001
 
 ## Configuration values for the postgresql dependency.
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
 ##
 postgresql:
   # 9.6 is the newest supported version for the GitLab container
-  imageTag: "9.6"
+  imageTag: "9.6.4"
   cpu: 1000m
   memory: 1Gi
 
@@ -99,6 +102,7 @@ postgresql:
 
   persistence:
     size: 10Gi
+    existingClaim: slow-nfs-001
 
 ## Configuration values for the redis dependency.
 ## ref: https://github.com/kubernetes/charts/blob/master/stable/redis/README.md
@@ -111,4 +115,6 @@ redis:
       memory: 1Gi
 
   persistence:
+    enabled: false
     size: 10Gi
+    existingClaim: slow-nfs-001

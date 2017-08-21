@@ -103,14 +103,14 @@ spec:
       - name: gitlab-etc
       {{- if .Values.persistence.gitlabEtc.enabled }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-etc
+          claimName: slow-nfs-001
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: gitlab-data
       {{- if .Values.persistence.gitlabData.enabled }}
         persistentVolumeClaim:
-          claimName: {{ template "fullname" . }}-data
+          claimName: slow-nfs-001
       {{- else }}
         emptyDir: {}
       {{- end }}
